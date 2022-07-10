@@ -22,6 +22,16 @@ path = os.getcwd()
 app = Flask(__name__, instance_path=path)
 CORS(app)
 
+# init neo4j
+# db = get_db()
+# db.run("LOAD CSV FROM 'file:///data.csv' AS line "
+#        "MERGE (n:Entity {name : line[1]}) "
+#        "WITH line, n "
+#        "MERGE (m:Entity {name : line[2]}) "
+#        "WITH m,n,line[3] as relName, line[4] as urlName, line[5] as jName "
+#        "MERGE (m)-[rel1:RELATED{name:relName, url:urlName, journal:jName}]->(n); ")
+
+
 def get_db():
     if not hasattr(g, 'neo4j_db'):
         g.neo4j_db = driver.session(database=database)

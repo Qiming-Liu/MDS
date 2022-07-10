@@ -1,7 +1,7 @@
 import { useRoutes } from 'react-router-dom';
 // layouts
-import DashboardLayout from './layouts/dashboard';
-import DashboardApp from './pages/DashboardApp';
+import MainLayout from './layouts/main';
+import Index from './pages/Index';
 
 // ----------------------------------------------------------------------
 
@@ -9,9 +9,9 @@ export default function Router() {
   return useRoutes([
     {
       path: '/',
-      element: <DashboardLayout />,
+      element: <MainLayout />,
       children: [
-        { path: '', element: <DashboardApp /> },
+        { path: '', element: <Index /> },
       ],
     },
   ]);
