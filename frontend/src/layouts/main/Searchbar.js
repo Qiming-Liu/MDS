@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 // material
 import { styled, alpha } from '@mui/material/styles';
-import { Input, Slide, Button, IconButton, InputAdornment, ClickAwayListener } from '@mui/material';
+import { Input, Slide, Button, IconButton, InputAdornment } from '@mui/material';
 // component
 import Iconify from '../../components/Iconify';
 
@@ -33,18 +34,17 @@ const SearchbarStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Searchbar() {
-  const [isOpen, setOpen] = useState(false);
+
+  const [isOpen, setOpen] = useState(true);
+  const [searchText, setSearchText] = useState('');
 
   const handleOpen = () => {
     setOpen((prev) => !prev);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
-    <ClickAwayListener onClickAway={handleClose}>
+    // <ClickAwayListener onClickAway={handleClose}>
+    <>
       <div>
         {!isOpen && (
           <IconButton onClick={handleOpen}>
@@ -55,10 +55,14 @@ export default function Searchbar() {
         <Slide direction="down" in={isOpen} mountOnEnter unmountOnExit>
           <SearchbarStyle>
             <Input
-              autoFocus
+              // autoFocus
               fullWidth
               disableUnderline
               placeholder="Search…"
+              value={searchText}
+              onChange={(event) => {
+                setSearchText(event.target.value);
+              }}
               startAdornment={
                 <InputAdornment position="start">
                   <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled', width: 20, height: 20 }} />
@@ -66,12 +70,12 @@ export default function Searchbar() {
               }
               sx={{ mr: 1, fontWeight: 'fontWeightBold' }}
             />
-            <Button variant="contained" onClick={handleClose}>
+            <Button variant="contained" component={Link} to={'/?search=' + searchText} color="primary">
               Search
             </Button>
           </SearchbarStyle>
         </Slide>
       </div>
-    </ClickAwayListener>
+    </>
   );
 }

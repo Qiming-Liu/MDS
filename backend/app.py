@@ -22,21 +22,10 @@ path = os.getcwd()
 app = Flask(__name__, instance_path=path)
 CORS(app)
 
-# init neo4j
-# db = get_db()
-# db.run("LOAD CSV FROM 'file:///data.csv' AS line "
-#        "MERGE (n:Entity {name : line[1]}) "
-#        "WITH line, n "
-#        "MERGE (m:Entity {name : line[2]}) "
-#        "WITH m,n,line[3] as relName, line[4] as urlName, line[5] as jName "
-#        "MERGE (m)-[rel1:RELATED{name:relName, url:urlName, journal:jName}]->(n); ")
-
-
 def get_db():
     if not hasattr(g, 'neo4j_db'):
         g.neo4j_db = driver.session(database=database)
     return g.neo4j_db
-
 
 @app.teardown_appcontext
 def close_db(error):
@@ -65,12 +54,12 @@ def overview():
 
         nodes[s['entity_id']] = {
             'id': s['entity_id'],
-            'name': s['entity_name']
+            'name': s['name']
         }
 
         nodes[o['entity_id']] = {
             'id': o['entity_id'],
-            'name': o['entity_name']
+            'name': o['name']
         }
 
         links.append({
@@ -113,8 +102,8 @@ def search():
             }
 
             nodes[o['entity_id']] = {
-                'id': o['entity_id'],
-                'name': o['entity_name']
+                'id': o['id'],
+                'name': o['name']
             }
 
             links.append({
@@ -131,4 +120,5 @@ def search():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, use_reloader=False, port=5000)
+
+    app.run(debug=True, use_reloader=False, host='0.0.0.0', port=5000)

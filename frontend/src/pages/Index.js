@@ -1,3 +1,4 @@
+import { useParams } from 'react-router-dom';
 // @mui
 import { Box, Card, CardHeader, Grid, Container, Typography } from '@mui/material';
 // components
@@ -20,6 +21,8 @@ const genRandomTree = (N = 300, reverse = false) => {
 };
 
 export default function Index() {
+  const params = useParams();
+
   return (
     <Page title="Index">
       <Container maxWidth="xl">
@@ -30,7 +33,7 @@ export default function Index() {
         <Grid container spacing={3}>
           <Grid item xs={12} md={12} lg={12}>
             <Card>
-              <CardHeader title={'asd'} subheader={'asd'} />
+              <CardHeader title={params.search || 'Overview'} />
 
               <Box sx={{ p: 3, pb: 1 }} dir="ltr">
                 <ForceGraph3D graphData={genRandomTree()} />
