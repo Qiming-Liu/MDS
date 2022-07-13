@@ -12,7 +12,6 @@ services:
     volumes:
       - ./neo4j/data:/data
       - ./neo4j/import:/var/lib/neo4j/import
-      - ./neo4j/example.cypher:/var/lib/neo4j/example.cypher
   backend:
     build:
       context: ./backend

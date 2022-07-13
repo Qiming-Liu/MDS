@@ -8,7 +8,7 @@ import Index from './pages/Index';
 export default function Router() {
   return useRoutes([
     {
-      path: '/',
+      path: '*',
       element: <MainLayout />,
       children: [
         { path: '', element: <Index /> },

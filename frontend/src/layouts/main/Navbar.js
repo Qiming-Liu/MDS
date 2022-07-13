@@ -11,7 +11,7 @@ import Searchbar from './Searchbar';
 
 // const DRAWER_WIDTH = 280;
 const APPBAR_MOBILE = 64;
-const APPBAR_DESKTOP = 92;
+const APPBAR_DESKTOP = 76;
 
 const RootStyle = styled(AppBar)(({ theme }) => ({
   boxShadow: 'none',

@@ -10,6 +10,7 @@ import os
 
 # neo4j
 uri = "neo4j://neo4j:7687"
+# uri = "neo4j://localhost:7687"
 neo4jVersion = "4.4.7"
 username = "neo4j"
 password = "123456"
@@ -17,6 +18,37 @@ database = "neo4j"
 
 driver = GraphDatabase.driver(uri, auth=(username, password))
 path = os.getcwd()
+
+def format_result(results):
+    nodes = {}
+    links = []
+    for record in results:
+        s = record.get('subject')
+        r = record.get('relation')
+        o = record.get('object')
+
+        nodes[s['name']] = {
+            'id': s['name'],
+            'name': s['name']
+        }
+
+        nodes[o['name']] = {
+            'id': o['name'],
+            'name': o['name']
+        }
+
+        links.append({
+            'source': s['name'],
+            'target': o['name'],
+            'relation': r
+        })
+
+    res = {
+        'nodes': list(nodes.values()),
+        'links': links
+    }
+
+    return res
 
 # flask
 app = Flask(__name__, instance_path=path)
@@ -45,33 +77,8 @@ def overview():
                                                          "RETURN properties(s) as subject, properties(r) as relation, properties(o) as object "
                                                          "LIMIT $limit",
                                                          {"limit": int(request.args.get("limit", 1000))})))
-    nodes = {}
-    links = []
-    for record in results:
-        s = record.get('subject')
-        r = record.get('relation')
-        o = record.get('object')
-
-        nodes[s['entity_id']] = {
-            'id': s['entity_id'],
-            'name': s['name']
-        }
-
-        nodes[o['entity_id']] = {
-            'id': o['entity_id'],
-            'name': o['name']
-        }
-
-        links.append({
-            'source': s['entity_id'],
-            'target': o['entity_id'],
-            'type': r['relation']
-        })
-
-    res = {
-        'nodes': list(nodes.values()),
-        'links': links
-    }
+    
+    res = format_result(results)
     return Response(dumps(res), mimetype="application/json")
 
 
@@ -84,41 +91,15 @@ def search():
     else:
         db = get_db()
         results = db.read_transaction(lambda tx: list(tx.run("MATCH (s)-[r]->(o) "
-                                                             "WHERE s.entity_name CONTAINS $name "
+                                                             "WHERE s.name CONTAINS $name "
                                                              "RETURN properties(s) as subject, properties(r) as relation, properties(o) as object "
                                                              "LIMIT $limit",
                                                              {"name": name,
                                                               "limit": int(request.args.get("limit", 1000))})))
-        nodes = {}
-        links = []
-        for record in results:
-            s = record.get('subject')
-            r = record.get('relation')
-            o = record.get('object')
 
-            nodes[s['entity_id']] = {
-                'id': s['entity_id'],
-                'name': s['entity_name']
-            }
-
-            nodes[o['entity_id']] = {
-                'id': o['id'],
-                'name': o['name']
-            }
-
-            links.append({
-                'source': s['entity_id'],
-                'target': o['entity_id'],
-                'type': r['relation']
-            })
-
-        res = {
-            'nodes': list(nodes.values()),
-            'links': links
-        }
+        res = format_result(results)
         return Response(dumps(res), mimetype="application/json")
 
 
 if __name__ == '__main__':
-
     app.run(debug=True, use_reloader=False, host='0.0.0.0', port=5000)
