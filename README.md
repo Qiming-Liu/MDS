@@ -1,5 +1,7 @@
 ## MDS
 
+<p align="center"><img src="./docs/index.png"></p>
+
 ### Build & Run
 The build and run process is based on `docker`.  
 Make sure you have `docker-desktop` installed.  
