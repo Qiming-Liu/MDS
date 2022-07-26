@@ -6,8 +6,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - name: backend-heroku
-      uses: JamesIves/github-pages-deploy-action@v4
-      with:
-        branch: backend-heroku
-        folder: backend
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+      - name: backend-heroku
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: backend-heroku
+          folder: backend
