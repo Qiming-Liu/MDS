@@ -27,9 +27,9 @@ export default function Index() {
       let response;
       // console.log(search);
       if (search) {
-        response = await fetch(`http://localhost:5000/search?keyword=${search}`).then((res) => res.json());
+        response = await fetch(`${process.env.REACT_APP_BACKEND_DOMAIN}/search?keyword=${search}`).then((res) => res.json());
       } else {
-        response = await fetch(`http://localhost:5000/overview`).then((res) => res.json());
+        response = await fetch(`${process.env.REACT_APP_BACKEND_DOMAIN}/overview`).then((res) => res.json());
       }
       console.log(response);
       setGraphData(response);
