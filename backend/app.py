@@ -8,13 +8,24 @@ import pickle
 import numpy as np
 import os
 
+from os.path import join, dirname
+from dotenv import load_dotenv
+
+# .env
+dotenv_path = join(dirname(__file__), 'neo4j-auradb.env')
+load_dotenv(dotenv_path=dotenv_path, verbose=True)
+
 # neo4j
-uri = "neo4j://neo4j:7687"
-# uri = "neo4j://localhost:7687"
 neo4jVersion = "4.4.7"
-username = "neo4j"
-password = "123456"
+# uri = "neo4j://neo4j:7687"
+# uri = "neo4j://localhost:7687"
+uri = os.getenv("NEO4J_URI")
 database = "neo4j"
+
+# username = "neo4j"
+# password = "123456"
+username = os.getenv("NEO4J_USERNAME")
+password = os.getenv("NEO4J_PASSWORD")
 
 driver = GraphDatabase.driver(uri, auth=(username, password))
 path = os.getcwd()
