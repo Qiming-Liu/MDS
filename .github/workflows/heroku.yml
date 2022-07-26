@@ -1,12 +1,7 @@
 name: Heroku
-
-on:
-  push:
-    branches:
-      - backend-heroku
-
+on: workflow_dispatch
 jobs:
-  build:
+  Heroku:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

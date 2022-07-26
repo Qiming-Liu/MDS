@@ -3,7 +3,7 @@ on:
   push:
     branches: [ main ]
 jobs:
-  test:
+  Backend-barnch:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
