@@ -6,10 +6,7 @@ from flask_cors import CORS
 from json import dumps
 from neo4j import GraphDatabase
 
-import pickle
-import numpy as np
 import os
-
 from os.path import join, dirname
 from dotenv import load_dotenv
 
@@ -20,7 +17,7 @@ class Config(object):
             'id': 'neo4j',
             'func': '__main__:neo4j_auradb_task',
             'trigger': 'interval',
-            'seconds': 10
+            'seconds': 24 * 60 * 60
         }
     ]
 
