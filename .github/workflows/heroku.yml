@@ -10,3 +10,5 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "mds-3d-graph" #Must be unique in Heroku
           heroku_email: "covid19uofa@gmail.com"
+          dontuseforce: true
+          dontautocreate: true
