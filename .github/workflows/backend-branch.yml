@@ -1,0 +1,13 @@
+name: Backend-barnch
+on:
+  push:
+    branches: [ main ]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: backend-heroku
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        branch: backend-heroku
+        folder: backend
