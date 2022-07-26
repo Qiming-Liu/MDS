@@ -1,3 +1,5 @@
+import requests
+from flask_apscheduler import APScheduler
 from flask import Flask, g, Response, request
 from flask_cors import CORS
 
@@ -10,6 +12,25 @@ import os
 
 from os.path import join, dirname
 from dotenv import load_dotenv
+
+
+class Config(object):
+    JOBS = [
+        {
+            'id': 'neo4j',
+            'func': '__main__:neo4j_auradb_task',
+            'trigger': 'interval',
+            'seconds': 10
+        }
+    ]
+
+# timed task
+
+
+def neo4j_auradb_task():
+    url = "https://mds-3d-graph.herokuapp.com/overview"
+    requests.get(url)
+
 
 # .env
 dotenv_path = join(dirname(__file__), 'neo4j-auradb.env')
@@ -29,6 +50,7 @@ password = os.getenv("NEO4J_PASSWORD")
 
 driver = GraphDatabase.driver(uri, auth=(username, password))
 path = os.getcwd()
+
 
 def format_result(results):
     nodes = {}
@@ -61,14 +83,18 @@ def format_result(results):
 
     return res
 
+
 # flask
 app = Flask(__name__, instance_path=path)
 CORS(app)
+app.config.from_object(Config())
+
 
 def get_db():
     if not hasattr(g, 'neo4j_db'):
         g.neo4j_db = driver.session(database=database)
     return g.neo4j_db
+
 
 @app.teardown_appcontext
 def close_db(error):
@@ -88,7 +114,7 @@ def overview():
                                                          "RETURN properties(s) as subject, properties(r) as relation, properties(o) as object "
                                                          "LIMIT $limit",
                                                          {"limit": int(request.args.get("limit", 1000))})))
-    
+
     res = format_result(results)
     return Response(dumps(res), mimetype="application/json")
 
@@ -113,4 +139,8 @@ def search():
 
 
 if __name__ == '__main__':
+    scheduler = APScheduler()
+    scheduler.init_app(app)
+    scheduler.start()
+
     app.run(debug=True, use_reloader=False, host='0.0.0.0', port=5000)
