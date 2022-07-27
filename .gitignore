@@ -1,2 +1,3 @@
 /frontend/node_modules
 /neo4j/data
+/frontend/.env

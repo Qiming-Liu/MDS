@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 // material
 import { styled, alpha } from '@mui/material/styles';
 import { Input, Slide, Button, IconButton, InputAdornment } from '@mui/material';
@@ -33,8 +32,11 @@ const SearchbarStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function Searchbar() {
+const jumpTo = (path) => {
+  window.location.href = path;
+};
 
+export default function Searchbar() {
   const [isOpen, setOpen] = useState(true);
   const [searchText, setSearchText] = useState('');
 
@@ -68,9 +70,12 @@ export default function Searchbar() {
                   <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled', width: 20, height: 20 }} />
                 </InputAdornment>
               }
+              onKeyPress={(event) => {
+                if (event.key === 'Enter') jumpTo(`/${searchText}`);
+              }}
               sx={{ mr: 1, fontWeight: 'fontWeightBold' }}
             />
-            <Button variant="contained" component={Link} to={'/?search=' + searchText} color="primary">
+            <Button variant="contained" color="primary" onClick={() => jumpTo(`/${searchText}`)}>
               Search
             </Button>
           </SearchbarStyle>

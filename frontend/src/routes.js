@@ -10,9 +10,7 @@ export default function Router() {
     {
       path: '*',
       element: <MainLayout />,
-      children: [
-        { path: '', element: <Index /> },
-      ],
+      children: [{ path: '*', element: <Index /> }],
     },
   ]);
 }

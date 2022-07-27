@@ -1,8 +1,9 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
-import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 // @mui
-import { Box, Card, CardHeader, Grid, Container, Typography } from '@mui/material';
+import { Box, Card, CardHeader, Container, Typography } from '@mui/material';
 // components
 import Page from '../components/Page';
 // graph
@@ -11,26 +12,23 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import { SizeMe } from 'react-sizeme';
 
 // ----------------------------------------------------------------------
-
-function useQuery() {
-  const { search } = useLocation();
-  return useMemo(() => new URLSearchParams(search), [search]);
-}
-
 export default function Index() {
-  const search = useQuery().get('search');
+  const location = useLocation();
+  const search = location.pathname?.substring(1, location.pathname.length);
   const fgRef = useRef();
-  const [graphData, setGraphData] = useState({ nodes: [], links: [] });
+  const [graphData, setGraphData] = useState({
+    nodes: [],
+    links: [],
+  });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
-      let response;
-      // console.log(search);
-      if (search) {
-        response = await fetch(`${process.env.REACT_APP_BACKEND_DOMAIN}/search?keyword=${search}`).then((res) => res.json());
-      } else {
-        response = await fetch(`${process.env.REACT_APP_BACKEND_DOMAIN}/overview`).then((res) => res.json());
-      }
+      setLoading(true);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_DOMAIN}/search?keyword=${search}`).then((res) =>
+        res.json()
+      );
+      setLoading(false);
       console.log(response);
       setGraphData(response);
 
@@ -43,7 +41,7 @@ export default function Index() {
       fgRef.current.d3Force('link').distance(120);
     }
     fetchData();
-  }, [search]);
+  }, []);
 
   const handleClick = useCallback(
     (node) => {
@@ -75,7 +73,7 @@ export default function Index() {
           <Grid item xs={12} md={12} lg={12}> */}
         <Card sx={{ bgcolor: '#000011' }}>
           <CardHeader
-            title={search === null ? 'Overview (limit 1000)' : `${search} (${graphData.nodes.length})`}
+            title={loading ? 'Loading...' : `${search} (${graphData.nodes.length})`}
             sx={{ color: '#ffffff' }}
           />
 
