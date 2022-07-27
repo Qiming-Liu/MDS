@@ -110,7 +110,7 @@ def overview():
     results = db.read_transaction(lambda tx: list(tx.run("MATCH (s)-[r]->(o) "
                                                          "RETURN properties(s) as subject, properties(r) as relation, properties(o) as object "
                                                          "LIMIT $limit",
-                                                         {"limit": int(request.args.get("limit", 1500))})))
+                                                         {"limit": int(request.args.get("limit", 1200))})))
 
     res = format_result(results)
     return Response(dumps(res), mimetype="application/json")
@@ -129,7 +129,7 @@ def search():
                                                              "RETURN properties(s) as subject, properties(r) as relation, properties(o) as object "
                                                              "LIMIT $limit",
                                                              {"name": name,
-                                                              "limit": int(request.args.get("limit", 1500))})))
+                                                              "limit": int(request.args.get("limit", 1200))})))
 
         res = format_result(results)
         return Response(dumps(res), mimetype="application/json")
